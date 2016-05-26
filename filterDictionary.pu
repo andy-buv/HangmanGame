@@ -1,0 +1,3 @@
+""" Filter Dictionary """
+
+def filterDictionary(dictionary,regex):
