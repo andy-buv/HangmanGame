@@ -1,0 +1,14 @@
+Notes on Hangman.
+
+The aim of the game is to guess the answer before you are hung.
+You are hung if you make 11 incorrect guesses.
+
+
+So we start with a dictionary. Get a friend to pick a word and make sure it is in the dictionary and so it isn't made up.
+
+Got your word? Great. Now write a dash '_' for each letter in that word.
+
+e.g. trouble = _ _ _ _ _ _ _ .
+
+now start guessing letters. 
+

@@ -95,7 +95,7 @@ def uModeLetter(dictionary,alphabet):
 		pct_letter_map[a] = abs(lFreq[a]*100/n - 50)
 
 	new = min(pct_letter_map.iteritems(), key = operator.itemgetter(1))
-	print new
+	#print new
 	#return modeLetter
 	return new[0]
 
@@ -142,63 +142,75 @@ def guessMissReduce(dictionary, miss):
 """ Main Function """
 # Runs through the functions in order
 def main():
-	alphabet = ascii_lowercase # represents the lowercase alphabet
+	
 	file = 'words2.txt' # the dictionary file we'll use
-	answer = '' 
-	solution = ''
-	try_hit = ''
-	try_missed = ''
-	tries = 0
-	misses = 0
-	hits = 0
-
 	# 1. Build the array from the words in the Dictionary File
 	dictionary = buildDict(file)
 
-	valid_word = False
+	for word in dictionary:
 
-	# 2. Get users input for the word to guess, check that it is in the dictionary file
-	while(not valid_word):
-		answer = wordInput()
-		valid_word = wordInDictionary(answer, dictionary)
+		alphabet = ascii_lowercase # represents the lowercase alphabet
+		answer = '' 
+		solution = ''
+		try_hit = ''
+		try_missed = ''
+		tries = 0
+		misses = 0
+		hits = 0
+		letters_tried = ''
+		valid_word = False
 
-	# 3. Initialize our solution the same length as answer 
-	solution = ' ' * len(answer)
-
-	# 4. Start the guessing process
-	while solution != answer:
-		letters_tried = try_missed + try_hit
-		if letters_tried != '':
-			alphabet = re.sub('[%s]' % letters_tried, '', alphabet)
-		solution_regex = solRegex(solution,letters_tried)
+		# 2. Get users input for the word to guess, check that it is in the dictionary file
+		"""
+		while(not valid_word):
+			#answer = wordInput()
+			valid_word = wordInDictionary(answer, dictionary)
+		"""
+		answer = word
+		# 3. Initialize our solution the same length as answer 
+		solution = ' ' * len(answer)
+		sub_dictionary = dictionary
 		
-		dictionary = filterDictionary(dictionary,solution_regex)
-		size_dictionary = len(dictionary)
 
-		if size_dictionary == 1:
-			solution = str(dictionary[0])
-		else:
-			print ('Number of words in sub dictionary = ' + str(size_dictionary))
-			letter_guess = uModeLetter(dictionary,alphabet)
-			print letter_guess
-			input_guess = raw_input('Enter your guess Letter: ')
+		# 4. Start the guessing process
+		while solution != answer:
+			#print sub_dictionary
+			if letters_tried != '':
+				alphabet = re.sub('[%s]' % letters_tried, '', alphabet)
+			solution_regex = solRegex(solution,letters_tried)
+			
+			sub_dictionary = filterDictionary(sub_dictionary,solution_regex)
+			size_sub_dictionary = len(sub_dictionary)
+			#print "Solution so far" + solution
 
-			if input_guess in answer:
-				print ('Hit! Letter ' + input_guess + ' is in the answer.')
-				tries += 1
-				hits += answer.count(input_guess)
-				try_hit += input_guess
-
-				solution = tryHitReduce(answer,solution,input_guess)
-
+			if size_sub_dictionary == 1:
+				solution = str(sub_dictionary[0])
 			else:
-				print ('Miss! Letter ' + input_guess + ' is not in the answer.')
-				tries += 1
-				misses += 1
-				try_missed += input_guess
+				#print ('Number of words in sub sub_dictionary = ' + str(size_sub_dictionary))
+				letter_guess = uModeLetter(sub_dictionary,alphabet)
+				#print letter_guess
+				input_guess = letter_guess#raw_input('Enter your guess Letter: ')
 
-		
-	print ('Solved! the answer was %s.\n Letters tried = %d: %s. Number of misses = %d.' % (solution, tries, letters_tried, misses)) 
+				if input_guess in answer:
+					#print ('Hit! Letter ' + input_guess + ' is in the answer.')
+					tries += 1
+					hits += answer.count(input_guess)
+					try_hit += input_guess
+
+
+
+					solution = tryHitReduce(answer,solution,input_guess)
+
+				else:
+					#print ('Miss! Letter ' + input_guess + ' is not in the answer.')
+					tries += 1
+					misses += 1
+					try_missed += input_guess
+
+				letters_tried += input_guess
+
+			
+		print ('Solved! the answer was %s.\n Letters tried = %d: %s. Number of misses = %d.' % (solution, tries, letters_tried, misses)) 
 
 
 
